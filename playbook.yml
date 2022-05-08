@@ -6,7 +6,7 @@
 
 - hosts: all
   tasks:
-    - name: "Enable 2375 port"
+    - name: "Enable port to expose deamon REST API"
       firewalld:
         zone: public
         port: "2375/tcp"
@@ -15,6 +15,7 @@
       become: true
     - name: "Reload firewalld"
       command: firewall-cmd --reload
+      changed_when: false
       become: true
     - name: "Replace line"
       lineinfile: 
@@ -23,14 +24,16 @@
         line: 'ExecStart=/usr/bin/dockerd -H fd:// --containerd=/run/containerd/containerd.sock  -H=tcp://0.0.0.0:2375'
         backrefs: true
     - name: "Reload deamon"
-      command: "systemctl daemon-reload"
+      command: "systemd daemon-reload"
+      changed_when: false
     - name: "Reload docker service"
       command: "sudo service docker restart"
+      changed_when: false
 
 - hosts: all
   become: true
   tasks:
-    - name: ""
+    - name: "Enable ports for docker swarm"
       firewalld:
         zone: public
         port: "{{ item }}"
@@ -45,7 +48,7 @@
     - name: "Reload firewalld"
       command: firewall-cmd --reload
       become: true
-
+      changed_when: false
 - hosts: all
   become: true
   roles:
