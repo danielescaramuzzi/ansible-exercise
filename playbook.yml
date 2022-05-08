@@ -13,7 +13,7 @@
         permanent: true
         state: enabled
       become: yes
-    - name: ""
+    - name: "Relaod firewalld"
       command: firewall-cmd --reload
       become: yes
     - name: "replace line"
