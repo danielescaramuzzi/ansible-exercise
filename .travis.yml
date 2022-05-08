@@ -3,7 +3,6 @@ install:
   - pip install ansible ansible-lint
   - ansible-lint --version
 script:
-  - ansible-lint playbook.yml
+  - ansible-lint --exclude ${HOME}/.ansible/roles/ playbook.yml
 notifications:
   webhooks: https://galaxy.ansible.com/api/v1/notifications/
-  
