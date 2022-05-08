@@ -3,3 +3,26 @@
   become: yes
   roles:
     - role: "avinetworks.docker"
+
+- hosts: all
+  tasks:
+    - name: ""
+      firewalld:
+        zone: public
+        port: "2375/tcp"
+        permanent: true
+        state: enabled
+      become: yes
+    - name: ""
+      command: firewall-cmd --reload
+      become: yes
+    - name: "replace line"
+      lineinfile: 
+        path: /lib/systemd/system/docker.service
+        regexp: '^(.*)ExecStart=/usr/bin/dockerd -H fd:// --containerd=/run/containerd/containerd.sock(.*)$' 
+        line: 'ExecStart=/usr/bin/dockerd -H fd:// --containerd=/run/containerd/containerd.sock  -H=tcp://0.0.0.0:2375'
+        backrefs: yes
+    - name: ""
+      command: "systemctl daemon-reload"
+    - name: ""
+      command: "sudo service docker restart"
