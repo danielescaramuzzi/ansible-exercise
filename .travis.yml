@@ -4,3 +4,6 @@ install:
   - ansible-lint --version
 script:
   - ansible-lint playbook.yml
+notifications:
+  webhooks: https://galaxy.ansible.com/api/v1/notifications/
+  
