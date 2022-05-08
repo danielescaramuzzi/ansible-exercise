@@ -6,7 +6,7 @@
 
 - hosts: all
   tasks:
-    - name: ""
+    - name: "Enable 2375 port"
       firewalld:
         zone: public
         port: "2375/tcp"
