@@ -2,6 +2,8 @@ language: python
 install:
   - pip install ansible ansible-lint
   - ansible-lint --version
+  - ansible-galaxy install avinetworks.docker
+  - ansible-galaxy install atosatto.docker-swarm
 script:
   - ansible-lint --exclude ${HOME}/.ansible/roles/ playbook.yml
 notifications:

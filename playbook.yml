@@ -13,22 +13,22 @@
         permanent: true
         state: enabled
       become: true
-    - name: "Relaod firewalld"
+    - name: "Reload firewalld"
       command: firewall-cmd --reload
-      become: yes
-    - name: "replace line"
+      become: true
+    - name: "Replace line"
       lineinfile: 
         path: /lib/systemd/system/docker.service
         regexp: '^(.*)ExecStart=/usr/bin/dockerd -H fd:// --containerd=/run/containerd/containerd.sock(.*)$' 
         line: 'ExecStart=/usr/bin/dockerd -H fd:// --containerd=/run/containerd/containerd.sock  -H=tcp://0.0.0.0:2375'
-        backrefs: yes
-    - name: ""
+        backrefs: true
+    - name: "Reload deamon"
       command: "systemctl daemon-reload"
-    - name: ""
+    - name: "Reload docker service"
       command: "sudo service docker restart"
 
 - hosts: all
-  become: yes
+  become: true
   tasks:
     - name: ""
       firewalld:
@@ -42,12 +42,12 @@
         - 7946/tcp
         - 7946/udp
         - 4789/udp
-    - name: ""
+    - name: "Reload firewalld"
       command: firewall-cmd --reload
-      become: yes
+      become: true
 
 - hosts: all
-  become: yes
+  become: true
   roles:
     - role: "atosatto.docker-swarm"
       docker_swarm_interface: "eth1"
