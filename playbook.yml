@@ -26,3 +26,28 @@
       command: "systemctl daemon-reload"
     - name: ""
       command: "sudo service docker restart"
+
+- hosts: all
+  become: yes
+  tasks:
+    - name: ""
+      firewalld:
+        zone: public
+        port: "{{ item }}"
+        permanent: true
+        state: enabled
+      become: yes
+      with_items:
+        - 2377/tcp
+        - 7946/tcp
+        - 7946/udp
+        - 4789/udp
+    - name: ""
+      command: firewall-cmd --reload
+      become: yes
+
+- hosts: all
+  become: yes
+  roles:
+    - role: "atosatto.docker-swarm"
+      docker_swarm_interface: "eth1"
