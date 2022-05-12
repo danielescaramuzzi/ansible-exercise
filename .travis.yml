@@ -5,6 +5,6 @@ install:
   - ansible-galaxy install avinetworks.docker
   - ansible-galaxy install atosatto.docker-swarm
 script:
-  - ansible-lint --exclude ${HOME}/.ansible/roles/ playbook.yml
+  - ansible-lint --exclude ${HOME}/.ansible/roles/ --exclude ./roles playbook.yml
 notifications:
   webhooks: https://galaxy.ansible.com/api/v1/notifications/

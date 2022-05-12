@@ -1,0 +1,10 @@
+[Service]
+ExecStart=
+ExecStart=/usr/bin/dockerd -H tcp://0.0.0.0:2376 \
+                           -H unix:///var/run/docker.sock \
+                           --tls \
+                           --tlskey {{ dds_server_cert_path }}/key.pem \
+                           --tlscert {{ dds_server_cert_path }}/cert.pem \
+                           --tlsverify \
+                           --tlscacert {{ dds_server_cert_path }}/ca.pem 
+Environment=
