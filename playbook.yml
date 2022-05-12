@@ -4,36 +4,46 @@
   roles:
     - role: "avinetworks.docker"
 
-- hosts: all
+
+- name: Enable ports to expose docker daemon REST API
+  hosts: all
+  vars:
+    certdir: "~/my_certificate_directory"
   tasks:
-    - name: "Enable port to expose deamon REST API"
+    - name: Enable port 2376
       firewalld:
         zone: public
-        port: "2375/tcp"
+        port: "2376/tcp"
         permanent: true
         state: enabled
       become: true
-    - name: "Reload firewalld"
-      command: firewall-cmd --reload
-      changed_when: false
-      become: true
-    - name: "Replace line"
-      lineinfile: 
-        path: /lib/systemd/system/docker.service
-        regexp: '^(.*)ExecStart=/usr/bin/dockerd -H fd:// --containerd=/run/containerd/containerd.sock(.*)$' 
-        line: 'ExecStart=/usr/bin/dockerd -H fd:// --containerd=/run/containerd/containerd.sock  -H=tcp://0.0.0.0:2375'
-        backrefs: true
-    - name: "Reload deamon"
-      command: "systemd daemon-reload"
-      changed_when: false
-    - name: "Reload docker service"
-      command: "sudo service docker restart"
-      changed_when: false
+    - name: Reload firewalld
+      ansible.builtin.systemd:
+        name: firewalld
+        state: reloaded
+- name: Secure the docker daemon on vm1
+  hosts: vm1
+  become: true
+  roles:
+    - role: role-secure-docker-daemon
+      dds_host: 192.168.56.120
+      dds_server_cert_path: /etc/default/docker
+      dds_restart_docker: true
+- name: Secure the docker daemon on vm2
+  hosts: vm2
+  become: true
+  roles:
+    - role: role-secure-docker-daemon
+      dds_host: 192.168.56.121
+      dds_server_cert_path: /etc/default/docker
+      dds_restart_docker: true
 
-- hosts: all
+
+- name: Enable ports for docker swarm
+  hosts: all
   become: true
   tasks:
-    - name: "Enable ports for docker swarm"
+    - name: Enable port 2377, 7946, 4789 for docker swarm
       firewalld:
         zone: public
         port: "{{ item }}"
@@ -45,10 +55,10 @@
         - 7946/tcp
         - 7946/udp
         - 4789/udp
-    - name: "Reload firewalld"
-      command: firewall-cmd --reload
-      become: true
-      changed_when: false
+    - name: Reload firewalld
+      ansible.builtin.systemd:
+        name: firewalld
+        state: reloaded
 - hosts: all
   become: true
   roles:
