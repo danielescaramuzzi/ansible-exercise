@@ -6,15 +6,16 @@
     state: directory
     path: "{{ dds_temp_path }}"   
 
-- name: Remove passphrase file, if it exists
-  file:
-    state: absent
-    path: "{{ dds_passphrase_file }}" 
+# - name: Remove passphrase file, if it exists
+#   file:
+#     state: absent
+#     path: "{{ dds_passphrase_file }}" 
 
 - name: Create passphrase file
   file:
     state: touch
     path: "{{ dds_passphrase_file }}" 
+  changed_when: false
 
 - name: Add passphrase to the file
   lineinfile:
@@ -22,10 +23,10 @@
     line: "{{ dds_passphrase }}" 
 
 - name: Generate ca-key.pem
-  command: "openssl genrsa -aes256 -passout file:{{ dds_passphrase_file }} -out {{ dds_temp_path }}/ca-key.pem 4096"
+  command: "creates=\"{{ dds_temp_path }}/ca-key.pem\" openssl genrsa -aes256 -passout file:{{ dds_passphrase_file }} -out {{ dds_temp_path }}/ca-key.pem 4096"
 
 - name: Generate ca certificate   
-  command: "openssl req -new -x509 -days 365 -key {{ dds_temp_path }}/ca-key.pem -sha256 -out {{ dds_temp_path }}/ca.pem -passin file:{{ dds_passphrase_file }} -subj '/C={{ dds_country }}/ST={{dds_state }}>/L={{ dds_locality }}/O={{ dds_organization }}/CN={{ dds_common_name }}'"
+  command: "creates=\"{{ dds_temp_path }}/ca.pem\" openssl req -new -x509 -days 365 -key {{ dds_temp_path }}/ca-key.pem -sha256 -out {{ dds_temp_path }}/ca.pem -passin file:{{ dds_passphrase_file }} -subj '/C={{ dds_country }}/ST={{dds_state }}>/L={{ dds_locality }}/O={{ dds_organization }}/CN={{ dds_common_name }}'"
 
 - include: generate_server_certs.yml
 - include: generate_client_certs.yml
@@ -46,10 +47,10 @@
     dest: "~/my_certificate_directory"
     remote_src: true
 
-- name: Remove the temp directory
-  file:
-    state: absent
-    path: "{{ dds_temp_path }}"
+# - name: Remove the temp directory
+#   file:
+#     state: absent
+#     path: "{{ dds_temp_path }}"
 
 
 - name: "Push the Docker daemon config to Server"
@@ -57,9 +58,10 @@
     src: docker.service
     dest: /lib/systemd/system/docker.service
   become: yes
+  notify: Restart the docker daemon 
 
-- name: Restart the docker daemon 
-  service:
-    name: docker
-    state: restarted  
-  when: dds_restart_docker
+# - name: Restart the docker daemon 
+#   service:
+#     name: docker
+#     state: restarted  
+#   when: dds_restart_docker

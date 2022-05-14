@@ -17,6 +17,8 @@
         port: "2376/tcp"
         permanent: true
         state: enabled
+      notify: Reload firewalld
+  handlers:
     - name: Reload firewalld
       ansible.builtin.systemd:
         name: firewalld
@@ -54,6 +56,8 @@
         - 7946/tcp
         - 7946/udp
         - 4789/udp
+      notify: Reload firewalld
+  handlers:
     - name: Reload firewalld
       ansible.builtin.systemd:
         name: firewalld
