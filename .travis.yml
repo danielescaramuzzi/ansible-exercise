@@ -12,7 +12,7 @@ install:
   - sudo vagrant --version
   - sudo vagrant plugin install vagrant-libvirt
 
-  - pip install "molecule[lint]"
+  - pip install molecule
   - pip install molecule-vagrant
 script:
   - ansible-lint --exclude ${HOME}/.ansible/roles/ --exclude ./roles playbook.yml
