@@ -1,0 +1,18 @@
+---
+# This is an example playbook to execute Ansible tests.
+
+- name: Verify
+  hosts: all
+  gather_facts: false
+  tasks:
+  - name: Verify Docker Daemon REST API is accessible on vm1
+    become: true
+    uri:
+      url: https://192.168.56.120:2376/images/json 
+      client_cert: ~/.docker/cert.pem
+      client_key: ~/.docker/key.pem
+      ca_path: ~/.docker/ca.pem
+      body_format: json
+      method: GET
+      status_code: 200  
+      validate_certs: no

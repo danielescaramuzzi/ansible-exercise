@@ -7,6 +7,7 @@
 
 - name: Enable ports to expose docker daemon REST API
   hosts: all
+  become: true
   vars:
     certdir: "~/my_certificate_directory"
   tasks:
@@ -16,7 +17,6 @@
         port: "2376/tcp"
         permanent: true
         state: enabled
-      become: true
     - name: Reload firewalld
       ansible.builtin.systemd:
         name: firewalld
@@ -49,7 +49,6 @@
         port: "{{ item }}"
         permanent: true
         state: enabled
-      become: true
       with_items:
         - 2377/tcp
         - 7946/tcp

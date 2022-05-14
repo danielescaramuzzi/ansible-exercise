@@ -1,0 +1,20 @@
+---
+dependency:
+  name: galaxy
+driver:
+  name: vagrant
+  provider:
+    name: virtualbox
+platforms:
+  - name: vm1
+    box: generic/centos7
+    groups:
+        - docker_swarm_manager
+        - docker_engine
+    interfaces:
+      - network_name: private_network
+        ip: 192.168.56.120
+provisioner:
+  name: ansible
+verifier:
+  name: ansible
