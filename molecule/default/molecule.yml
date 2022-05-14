@@ -5,6 +5,7 @@ driver:
   name: vagrant
   provider:
     name: libvirt
+    type: libvirt
 platforms:
   - name: vm1
     box: generic/centos7
