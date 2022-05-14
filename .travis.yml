@@ -4,7 +4,10 @@ install:
   - ansible-lint --version
   - ansible-galaxy install avinetworks.docker
   - ansible-galaxy install atosatto.docker-swarm
+  - pip install "molecule[lint]"
+  - pip install molecule-vagrant
 script:
   - ansible-lint --exclude ${HOME}/.ansible/roles/ --exclude ./roles playbook.yml
+  - molecule test
 notifications:
   webhooks: https://galaxy.ansible.com/api/v1/notifications/
