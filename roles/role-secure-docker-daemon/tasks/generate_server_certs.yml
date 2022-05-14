@@ -6,11 +6,6 @@
 - name: Create the server CSR 
   command: "creates=\"{{ dds_temp_path }}/server.csr\" openssl req -subj '/CN={{ dds_host }}' -sha256 -new -key {{ dds_temp_path }}/key.pem -out {{ dds_temp_path }}/server.csr"
 
-# - name: Remove extfile
-#   file:
-#     state: absent
-#     path: "{{ dds_extfile }}" 
-
 - name: Create extfile
   file:
     state: touch 
@@ -30,12 +25,6 @@
     state: directory
     path: "{{ dds_server_cert_path }}"
 
-# - name: Copy server certs
-#   command: cp "{{ dds_temp_path }}/{{ item }}" "{{ dds_server_cert_path }}/."
-#   with_items:
-#     - ca.pem
-#     - cert.pem
-#     - key.pem
 - name: Copy server certs
   copy: 
     src: "{{ dds_temp_path }}/{{ item }}"

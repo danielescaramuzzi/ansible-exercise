@@ -6,11 +6,6 @@
 - name: Create client CSR 
   command: "creates=\"{{ dds_temp_path }}/client.csr\" openssl req -subj '/CN=client' -new -key {{ dds_temp_path}}/key.pem -out {{ dds_temp_path }}/client.csr"
 
-# - name: Remove extfile
-#   file:
-#     state: absent
-#     path: "{{ dds_extfile }}"
-
 - name: Create extfile
   file:
     state: touch
@@ -30,12 +25,6 @@
     state: directory
     path: "{{ dds_client_cert_path }}"
 
-# - name: Copy client certs
-#   command: cp "{{ dds_temp_path }}/{{ item }}" "{{ dds_client_cert_path }}/."
-#   with_items:
-#     - ca.pem
-#     - cert.pem
-#     - key.pem
 - name: Copy client certs
   copy: 
     src: "{{ dds_temp_path }}/{{ item }}" 
