@@ -10,7 +10,7 @@ install:
   - sudo wget -nv https://releases.hashicorp.com/vagrant/2.2.19/vagrant_2.2.19_x86_64.deb
   - sudo dpkg -i vagrant_2.2.19_x86_64.deb
   - sudo vagrant --version
-  - sudo vagrant plugin install vagrant-libvirt
+  - vagrant plugin install vagrant-libvirt
 
   - pip install molecule
   - pip install molecule-vagrant
