@@ -7,7 +7,9 @@ install:
   - ansible-galaxy install atosatto.docker-swarm
 
   - sudo apt-get update && sudo apt-get install -y bridge-utils dnsmasq-base ebtables libvirt-bin libvirt-dev qemu-kvm qemu-utils ruby-dev
-  - sudo wget -nv https://releases.hashicorp.com/vagrant/2.2.19/vagrant_2.2.19_x86_64.deb
+  - sudo sed -i 's/unix_sock_group = "libvirt"/unix_sock_group = "travis"/' /etc/libvirt/libvirtd.conf
+  - sudo systemctl restart libvirtd.service
+  - wget -nv https://releases.hashicorp.com/vagrant/2.2.19/vagrant_2.2.19_x86_64.deb
   - sudo dpkg -i vagrant_2.2.19_x86_64.deb
   - sudo vagrant --version
   - vagrant plugin install vagrant-libvirt
