@@ -4,6 +4,7 @@ install:
   - ansible-lint --version
   - ansible-galaxy install avinetworks.docker
   - ansible-galaxy install atosatto.docker-swarm
+  - pip install python-vagrant
   - pip install "molecule[lint]"
   - pip install molecule-vagrant
 script:
