@@ -16,6 +16,7 @@ install:
 
   - pip install molecule
   - pip install molecule-vagrant
+  - pip install jmespath 
 script:
   - ansible-lint --exclude ${HOME}/.ansible/roles/ --exclude ./roles playbook.yml
   - molecule test
